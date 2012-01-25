@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Nats tester</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/jquery-1.7.1.min.js"></script>
+    <script>
+      var socket = io.connect('http://'+location.host);
+      
+      $(function(){
+        var connect = $('#connect')[0];
+        connect.onsubmit = function(){
+          socket.emit('doconnect', { url: connect.url.value });
+          return false;
+        };
+        
+        var subscribe = $('#subscribe')[0];
+        subscribe.onsubmit = function(){
+          socket.emit('subscribe', { event: subscribe.event.value });
+          return false;
+        };
+        
+        var publish = $('#publish')[0];
+        publish.onsubmit = function(){
+          socket.emit('publish', { event: publish.event.value, data: publish.data.value });
+          return false;
+        };
+        
+        var receive = $('#receive')[0];
+        socket.on('msg', function (data) {
+          var msg = $('<li />')[0];
+          msg.innerHTML = '<strong>'+data.event+' :</strong> '+data.msg;
+          if(receive.firstChild){
+            receive.insertBefore(msg, receive.firstChild);
+          }
+          else{
+            receive.appendChild(msg);
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Nats tester</h1>
+    <div>
+      <h2>Connection</h2>
+      <form action="#" id="connect">
+        <label>URL : <input type="text" name="url" /></label>
+        <input type="submit" name"connect" value="Connect" />
+      </form>
+    </div>
+    <div>
+      <h2>Subscribe</h2>
+      <form action="#" id="subscribe">
+        <label>Event : <input type="text" name="event" /></label>
+        <input type="submit" name="subscribe" value="Subscribe" />
+      </form>
+    </div>
+    <div>
+      <h2>Publish</h2>
+      <form action="#" id="publish">
+        <label>Event : <input type="text" name="event" /></label>
+        <label>Data : <input type="text" name="data" /></label>
+        <input type="submit" name="publish" value="Publish" />
+      </form>
+    </div>
+    <div>
+      <h2>Receive</h2>
+      <ul id="receive"></ul>
+    </div>
+  </body>
+</html>

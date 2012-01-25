@@ -1,0 +1,9 @@
+{
+  "name": "nats-web-client",
+  "version": "0.1.0",
+  "dependencies": {
+    "nats": "latest",
+    "express": "latest",
+    "socket.io": "latest"
+  }
+}
