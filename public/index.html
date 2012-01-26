@@ -22,7 +22,12 @@
         
         var publish = $('#publish')[0];
         publish.onsubmit = function(){
-          socket.emit('publish', { event: publish.event.value, data: publish.data.value });
+          if(publish.reply.value != '')
+          {
+            socket.emit('publish', { event: publish.event.value, data: publish.data.value, reply: publish.reply.value });
+          }
+          else
+            socket.emit('publish', { event: publish.event.value, data: publish.data.value });
           return false;
         };
         
@@ -61,6 +66,7 @@
       <form action="#" id="publish">
         <label>Event : <input type="text" name="event" /></label>
         <label>Data : <input type="text" name="data" /></label>
+        <label>Reply : <input type="text" name="reply" /></label>
         <input type="submit" name="publish" value="Publish" />
       </form>
     </div>

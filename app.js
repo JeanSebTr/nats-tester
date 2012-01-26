@@ -34,7 +34,11 @@ io.sockets.on('connection', function (socket) {
     socket.emit('msg', { event: 'nats.subscribe', msg: data.event });
   });
   socket.on('publish', function(data) {
-    socket.nats.publish(data.event, JSON.stringify(data.msg));
+    if(data.reply) {
+      socket.nats.publish(data.event, JSON.stringify(data.msg), data.reply);
+    }
+    else
+      socket.nats.publish(data.event, JSON.stringify(data.msg));
     socket.emit('msg', { event: 'nats.publish', msg: data.event });
   });
 });
