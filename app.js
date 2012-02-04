@@ -33,6 +33,12 @@ io.sockets.on('connection', function (socket) {
     socket.nats.subscribe(data.event, receive);
     socket.emit('msg', { event: 'nats.subscribe', msg: data.event });
   });
+  socket.on('request', function(data) {
+    socket.nats.request(data.event, function(msg) {
+      socket.emit('msg', { event: 'response for '+data.event, msg: msg });
+    });
+    socket.emit('msg', { event: 'nats.request', msg: data.event });
+  });
   socket.on('publish', function(data) {
     if(data.reply) {
       socket.nats.publish(data.event, JSON.stringify(data.msg), data.reply);

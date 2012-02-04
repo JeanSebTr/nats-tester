@@ -20,6 +20,12 @@
           return false;
         };
         
+        var request = $('#request')[0];
+        request.onsubmit = function(){
+          socket.emit('request', { event: request.event.value });
+          return false;
+        };
+        
         var publish = $('#publish')[0];
         publish.onsubmit = function(){
           if(publish.reply.value != '')
@@ -68,6 +74,13 @@
         <label>Data : <input type="text" name="data" /></label>
         <label>Reply : <input type="text" name="reply" /></label>
         <input type="submit" name="publish" value="Publish" />
+      </form>
+    </div>
+    <div>
+      <h2>Request</h2>
+      <form action="#" id="request">
+        <label>Event : <input type="text" name="event" /></label>
+        <input type="submit" name="request" value="Request" />
       </form>
     </div>
     <div>
