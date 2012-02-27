@@ -22,7 +22,7 @@
         
         var request = $('#request')[0];
         request.onsubmit = function(){
-          socket.emit('request', { event: request.event.value });
+          socket.emit('request', { event: request.event.value, data: request.data.value });
           return false;
         };
         
@@ -80,6 +80,7 @@
       <h2>Request</h2>
       <form action="#" id="request">
         <label>Event : <input type="text" name="event" /></label>
+        <label>Data : <input type="text" name="data" /></label>
         <input type="submit" name="request" value="Request" />
       </form>
     </div>

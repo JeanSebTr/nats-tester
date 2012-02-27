@@ -3,10 +3,6 @@ var express = require('express'),
     io = require('socket.io').listen(app),
     nats = require('nats');
 
-process.on('uncaughtException', function (err) {
-  console.log('Caught exception: ' + err);
-});
-
 app.configure(function(){
   app.use(express.methodOverride());
   app.use(express.bodyParser());
@@ -34,9 +30,15 @@ io.sockets.on('connection', function (socket) {
     socket.emit('msg', { event: 'nats.subscribe', msg: data.event });
   });
   socket.on('request', function(data) {
-    socket.nats.request(data.event, function(msg) {
+    var msg = data.data || undefined,
+    cb = function(msg) {
       socket.emit('msg', { event: 'response for '+data.event, msg: msg });
-    });
+    };
+    if(msg && msg.length > 0) {
+      socket.nats.request(data.event, msg, cb);
+    }
+    else
+      socket.nats.request(data.event, cb);
     socket.emit('msg', { event: 'nats.request', msg: data.event });
   });
   socket.on('publish', function(data) {
